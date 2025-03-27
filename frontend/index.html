@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- You can add your styles and scripts here -->
     <link rel="stylesheet" type="text/css" media="screen" href="styles/global.css" />
+    <link rel="stylesheet" href="styles/style.css" />
 </head>
 <body>
     <!-- This is an example app structure, you can modify this as much as you choose --> 
@@ -17,6 +18,51 @@
             <li class="nav-item">Item</li>
         </nav>
     </header>
+    <body>
+            <!-- 修改: 给 header 添加 id="main-header" -->
+    <header id="main-header">
+        <nav>
+            <a href="#/feed">Feed</a>
+            <a href="#/page1">Page1</a>
+            <a href="#/page2">Page2</a>
+        </nav>
+    </header>
+    
+    <!-- 登录页面的内容 -->
+    <section id="login-page" class="fullpage">
+        <div class="auth-container">
+          <div class="auth-box">
+            <h2>Login to LurkForWork</h2>
+            <form id="loginForm">
+              <div class="form-group">
+                <label for="loginEmail">Email</label>
+                <input 
+                  type="email" 
+                  id="loginEmail" 
+                  placeholder="Email" 
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input 
+                  type="password" 
+                  id="loginPassword" 
+                  placeholder="Password" 
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <button type="submit" class="auth-button">Login</button>
+              </div>
+              <div class="auth-links">
+                <a href="#/register">Don't have an account? Register</a>
+              </div>
+            </form>
+          </div>
+        </div>
+    </section>
+    </body>
     <main role="main">
         <!-- app goes here --> 
     </main>
