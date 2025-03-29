@@ -42,3 +42,40 @@ function showLoginPage() {
       dom.classList.add('hide');
     });
   }
+
+
+  window.addEventListener('hashchange', function() {
+    const hash = location.hash;
+    console.log('当前 Hash 值为：', hash);
+
+    switch (hash) {
+      case '#/login':
+        showLoginPage();
+        break;
+      case '#/register':
+        showRegisterPage();
+        break;
+      case '#/feed':
+        showHomePage();
+        break;
+      case '#/page1':
+        showHomePage();
+        showPage1();
+        break;
+      case '#/page2':
+        showHomePage();
+        showPage2();
+        break;
+      default:
+
+        showLoginPage();
+    }
+  });
+
+
+  if (!location.hash) {
+    location.hash = '#/login';
+  } else {
+
+    window.dispatchEvent(new Event('hashchange'));
+  }
