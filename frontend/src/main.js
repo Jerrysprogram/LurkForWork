@@ -79,3 +79,43 @@ function showLoginPage() {
 
     window.dispatchEvent(new Event('hashchange'));
   }
+
+
+document.getElementById('loginForm').addEventListener('submit', function (event) {
+
+  event.preventDefault();
+  
+
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+
+  fetch('http://localhost:5005/auth/login', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        email: email,
+        password: password
+    })
+  })
+.then(data => {
+
+  if (data.error) {
+    // alert('Login failed: ' + data.error);
+    showErrorPopup('Login failed: ' + data.error, 'error');
+
+  } else {
+    // alert('Login successful');
+    showErrorPopup('Login successful', 'success');
+    location.hash = '#/feed';
+  }
+})
+.catch(error => {
+
+  console.error('Login request error:', error);
+  showErrorPopup('An error occurred during login', 'error');
+  // alert('An error occurred during login');
+
+});
+});
