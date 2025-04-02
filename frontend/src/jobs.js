@@ -444,3 +444,99 @@ const popupCommentList = (comments, postId) => {
 
         commentList.appendChild(listItem);
     });
+
+
+    const oldCommentButton = document.getElementById("comment-button");
+    const newCommentButton = oldCommentButton.cloneNode(true);
+    oldCommentButton.parentNode.replaceChild(newCommentButton, oldCommentButton);
+
+    newCommentButton.addEventListener("click", () => {
+        const inputComment = document.getElementById("comment-input").value;
+        if (inputComment) {
+            apiCall(`job/comment`, "POST", { "id": postId, "comment": inputComment })
+                .catch(() => { 
+                    showErrorPopup("No internet connection.");
+                    return;
+                });
+            document.getElementById("comment-input").value = "";
+        } else {
+            showErrorPopup("Please enter a comment.");
+            return;
+        }
+        
+        apiCall('job/feed?start=0', "GET", { "id": postId }).then((data) => {
+            document.getElementById("comment-list-popup").style.display = "none";
+            
+            const commentList = document.getElementById("comment-list");
+            while (commentList.firstChild) {
+                commentList.removeChild(commentList.firstChild);
+            }
+            const updatedComments = data.find((item) => item.id === postId).comments;
+            popupCommentList(updatedComments, postId);
+        });
+    });
+
+    showPopup("comment-list-popup");
+};
+
+document.getElementById("like-close-btn").addEventListener("click", () => {
+    document.getElementById("like-list-popup").style.display = "none";
+    
+    const likeList = document.getElementById("like-list");
+    while (likeList.firstChild) {
+        likeList.removeChild(likeList.firstChild);
+    }
+});
+
+document.getElementById("comment-close-btn").addEventListener("click", () => {
+    document.getElementById("comment-list-popup").style.display = "none";
+    
+    const commentList = document.getElementById("comment-list");
+    while (commentList.firstChild) {
+        commentList.removeChild(commentList.firstChild);
+    }
+});
+
+document.getElementById("nav-add-job").addEventListener("click", () => {
+    currentJobId = -1;
+    document.getElementById("add-job-popup-title").textContent = "Add a New Job";
+    showPopup("add-job-popup");
+});
+
+document.getElementById("add-job-submit").addEventListener("click", () => {
+    updateJob().then(() => {
+        
+        const currentUserId = localStorage.getItem("userId");
+        populateUserInfo(currentUserId)
+            .then((newUserData) => {
+                populateFeed(newUserData.jobs, "user-jobs");
+                populateWatchees(newUserData);
+            });
+
+        
+        document.getElementById("add-job-popup").style.display = "none";
+        document.getElementById("job-title").value = "";
+        document.getElementById("job-start-date").value = "";
+        document.getElementById("job-description").value = "";
+        document.getElementById("job-image").value = "";
+    });
+});
+
+document.getElementById("add-job-close-btn").addEventListener("click", () => {
+    document.getElementById("add-job-popup").style.display = "none";
+    document.getElementById("job-title").value = "";
+    document.getElementById("job-start-date").value = "";
+    document.getElementById("job-description").value = "";
+    document.getElementById("job-image").value = "";
+});
+
+document.getElementById("nav-feed").addEventListener("click", () => {
+    show("page-feed");
+    show("section-logged-in");
+    hide("page-profile");
+    show("nav-profile");
+    populateFeed();
+    show("watch-user-button");
+    // hide("nav-feed");
+    
+});
