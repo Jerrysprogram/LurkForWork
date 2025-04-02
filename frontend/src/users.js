@@ -120,4 +120,73 @@ document.getElementById("nav-profile").addEventListener("click", () => {
     hide("section-logged-in");
     hide("main-content");
     show("page-profile");
+});
+const showPopup = (id) => {
+    document.getElementById(id).style.display = "block";
+};
 
+document.getElementById("edit-profile-button").addEventListener("click", () => {
+
+    document.getElementById("edit-profile-popup-title").textContent = "Edit Profile";
+    showPopup("edit-profile-popup");
+});
+
+document.getElementById("edit-profile-close-btn").addEventListener("click", () => {
+    document.getElementById("edit-profile-popup").style.display = "none";
+    document.getElementById("profile-email").value = "";
+    document.getElementById("profile-name").value = "";
+    document.getElementById("profile-password").value = "";
+    document.getElementById("profile-image").value = "";
+});
+
+const updateProfile = () => {
+    const email = document.getElementById("profile-email").value;
+    const name = document.getElementById("profile-name").value;
+    const password = document.getElementById("profile-password").value;
+    const imageFile = document.getElementById("profile-image").files[0];
+
+    const userAvatar = document.getElementById("user-avatar");
+    const userName = document.getElementById("user-name");
+    const userEmail = document.getElementById("user-email");
+    
+    if (!emailValidator(email)) {
+        showErrorPopup("Email format should be: example@domain.com");
+        return false;
+    }
+    userEmail.textContent = `${email}`;
+
+    if (!passwordValidator(password)) {
+        showErrorPopup("Password should be at least 8 characters long and contain at least one uppercase letter and one number");
+        return false;
+    }
+
+    if (!nameValidator(name)) {
+        showErrorPopup("Name should be between 2 and 30 characters");
+        return false;
+    }
+    userName.textContent = `${name}`;
+
+    if (email && name && password && imageFile) {
+        return fileToDataUrl(imageFile)
+            .then((imageData) => {
+                userAvatar.style.backgroundImage = `url(${imageData})`;
+
+                const requestBody = {
+                    "email": email,
+                    "image": imageData,
+                    "name": name,
+                    "password": password
+                };
+
+                return apiCall("user", "PUT", requestBody)
+                    .then((data) => {
+                        showInfoPopup('update successful!');
+                    })
+                    .catch((error) => {
+                        showErrorPopup(error);
+                    });
+            });
+    } else {
+        showErrorPopup("Missing fields");
+    }
+};
