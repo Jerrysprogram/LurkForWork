@@ -61,3 +61,67 @@ export const registerValidator = (email, name, password, passwordConfirm) => {
     }
     return true;
 };
+
+
+
+document.getElementById("nav-register").addEventListener("click", () => {
+    show("page-register");
+    hide("page-login");
+});
+
+document.getElementById("nav-login").addEventListener("click", () => {
+    hide("page-register");
+    show("page-login");
+});
+
+document.getElementById("login-button").addEventListener("click", (event) => {
+    event.preventDefault();
+    const [email, password] = getValuesInForm("login-form");
+    const payload = {
+        email: email,
+        password: password,
+    };
+    apiCall("auth/login", "POST", payload)
+        .then((data) => {
+            handleLogin(data);
+        })
+        .catch((error) => {
+            showErrorPopup(error);
+        });
+});
+
+document.getElementById("register-button").addEventListener("click", (event) => {
+    event.preventDefault();
+    const [email, name, password, passwordConfirm] = getValuesInForm("register-form");
+    if (!registerValidator(email, name, password, passwordConfirm)) {
+        return;
+    }
+    const payload = {
+        email: email,
+        password: password,
+        name: name,
+    };
+    apiCall("auth/register", "POST", payload)
+        .then((data) => {
+            handleLogin(data);
+        })
+        .catch((error) => {
+            showErrorPopup(error);
+        });
+});
+
+document.getElementById("error-popup-close").addEventListener("click", () => {
+    hide("error-popup");
+});
+
+document.getElementById("nav-logout").addEventListener("click", () => {
+    document.getElementById("confirm-popup-message").textContent = "Are you sure you want to logout?";
+    show("confirm-popup");
+});
+
+document.getElementById("logout-popup-cofirm").addEventListener("click", () => {
+    handleLogout();
+});
+document.getElementById("logout-popup-cancel").addEventListener("click", () => {
+    hide("confirm-popup");
+});
