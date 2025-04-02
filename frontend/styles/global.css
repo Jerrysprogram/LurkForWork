@@ -205,3 +205,97 @@ footer p {
     justify-content: center;
     align-items: center;
 }
+
+.banner img{
+    width: 40%;
+    margin: 50px 0;
+}
+.banner h1 {
+    font-size: 50px;
+    color: #1c1c1c;
+    font-weight: bold;
+}
+
+.banner h2 {
+    font-size: 30px;
+    color: #666;
+    font-weight: lighter;
+    margin-top: 30px;
+}
+.info,
+.info2,
+.info3 {
+    background-color: #f1f0fe;
+    font-size: 30px;
+    padding: 100px 0;
+    width: 100%;
+}
+
+.info2{
+    background-color: #fff;
+}
+.info3{
+    background-color: #f1f0ee;
+}
+.info .container, 
+.info2 .container,
+.info3 .container,
+.info4 .container{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.info .container ul, 
+.info2 .container ul,
+.info3 .container ul{
+    list-style: none;
+    padding: 0;
+}
+.info .container ul li,
+.info2 .container ul li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 8px 26px;
+    border-radius: 16px;
+    color: #888;
+    border:1px solid #888;
+    background: #fff;
+    display: inline-block;
+    font-size: 20px;
+}
+.info3 {
+    font-size: 18px;
+}
+.info3 img{
+    width: 30%;
+    margin-left: 50px;
+}
+.info3 h3{
+    color: #b24020;
+    font-size: 36px;
+}
+.info4 {
+    background-color: #fff;
+    font-size: 30px;
+    padding: 100px 0;
+}
+.info4 p{
+    margin-top: 20px;
+}
+
+.popup-content{
+   border-radius: 16px;
+}
+.form-group{
+    margin: 5px 0;
+}
+#confirm-popup{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,.7);
+    top: 0;
+    left: 0;
+    z-index: 999;
+}
