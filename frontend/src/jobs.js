@@ -540,3 +540,77 @@ document.getElementById("nav-feed").addEventListener("click", () => {
     // hide("nav-feed");
     
 });
+
+
+
+window.addEventListener("scroll", () => {
+    if (!document.getElementById("page-profile").classList.contains("hide")) {
+        return;
+    }
+    if (!document.getElementById("main-content").classList.contains("hide")) {
+        return;
+    }
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+    if (clientHeight + scrollTop >= scrollHeight - 5) {
+        currentPage++;
+
+        const start = currentPage * itemsPerPage;
+        apiCall(`job/feed?start=${start}`, "GET", {})
+            .then((data) => {
+                if (data.length === 0) {
+                    return;
+                }
+                console.log(data)
+                populatePostCards(data, "feed-items");
+            })
+            .catch((error) => {
+                console.error("Error fetching next page of job items:", error);
+            })
+    }
+});
+
+
+
+export const pollFeed = () => {
+    apiCall("job/feed?start=0", "GET", {})
+        .then((data) => {
+            
+            if (jsonHash(data) !== lastFeedContentHash) {
+                populateFeed();
+            }
+        })
+};
+
+
+const getNumFeedItems = () => {
+    return new Promise((resolve, reject) => {
+        try {
+          let numFeedItems = 0;
+          const fetchJobData = (startIdx) => {
+            return apiCall(`job/feed?start=${startIdx}`, "GET", {}).then((jobData) => {
+                  if (jobData && jobData.length > 0) {
+                        numFeedItems += jobData.length;
+                        return fetchJobData(startIdx + 5);
+                  } else {
+                        return numFeedItems;
+                  }
+              });
+          };
+
+          fetchJobData(0)
+              .then((numFeedItems) => {
+                    if (lastNumFeedItems === null) {
+                        lastNumFeedItems = numFeedItems;
+                    }
+                    resolve(numFeedItems);
+              })
+              .catch((error) => {
+                  reject(error);
+              });
+        } catch (error) {
+              console.error("Error fetching job data:", error);
+              reject(error);
+        }
+      });
+};
