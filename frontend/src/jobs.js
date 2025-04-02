@@ -247,3 +247,102 @@ export const populatePostCards = (data, containerId) => {
 
     return Promise.all(cardPromises);
 };
+
+
+const updateJob = () => {
+    const title = document.getElementById("job-title").value;
+    const startDate = document.getElementById("job-start-date").value;
+    const description = document.getElementById("job-description").value;
+    const imageFile = document.getElementById("job-image").files[0];
+
+    if (title && startDate && description && imageFile) {
+        return fileToDataUrl(imageFile)
+            .then((imageData) => {
+                const requestBody = {
+                    "title": title,
+                    "image": imageData,
+                    "start": startDate,
+                    "description": description
+                };
+
+                let response;
+                if (currentJobId === -1) { 
+                    return apiCall("job", "POST", requestBody).then((resp) => {
+                        response = resp;
+                        if (response) {
+                            
+                            document.getElementById("add-job-popup").style.display = "none";
+                            populateFeed();
+                            
+                            populateUserInfo(localStorage.getItem("userId"))
+                            .then((newUserData) => {
+                                document.getElementById("user-jobs").textContent = "";
+                                populatePostCards(newUserData.jobs, "user-jobs");
+                            });
+                        } else {
+                            
+                            showErrorPopup(response.error);
+                            console.error(`Error: ${response.error}`);
+                        }
+                    });
+                } else { 
+                    requestBody.id = currentJobId;
+                    return apiCall("job", "PUT", requestBody).then((resp) => {
+                        response = resp;
+                        if (response) {
+                            
+                            document.getElementById("add-job-popup").style.display = "none";
+                            populateFeed();
+                            
+                            populateUserInfo(localStorage.getItem("userId"))
+                            .then((newUserData) => {
+                                document.getElementById("user-jobs").textContent = "";
+                                populatePostCards(newUserData.jobs, "user-jobs");
+                            });
+                        } else {
+                            
+                            showErrorPopup(response.error);
+                            console.error(`Error: ${response.error}`);
+                        }
+                    });
+                }
+            });
+    } else {
+        showErrorPopup("Missing fields");
+    }
+};
+
+
+const getCreatorUsername = (id) => {
+    return apiCall(`user`, "GET", { userId: id })
+        .then((data) => {
+            localStorage.setItem(`user_${id}`, JSON.stringify(data.name));
+            return data.name;
+        })
+        .catch(() => { 
+            const cachedData = localStorage.getItem(`user_${id}`);
+            if (cachedData) {
+                return JSON.parse(cachedData);
+            }
+            return "Unknown";
+        });
+};
+
+const formatTime = (createAt) => {
+    const now = new Date();
+    const createdDate = new Date(createAt);
+    const diffInMs = now - createdDate;
+    const diffInMinutes = diffInMs / (1000 * 60);
+    const diffInHours = diffInMs / (1000 * 60 * 60);
+
+    if (diffInHours < 24 && diffInHours > 0) {
+        const hours = Math.floor(diffInHours);
+        const minutes = Math.floor(diffInMinutes % 60);
+        return `${hours} hours ${minutes} minutes ago`;
+    } else {
+        const day = createdDate.getDate();
+        const month = createdDate.getMonth() + 1;
+        const year = createdDate.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+};
