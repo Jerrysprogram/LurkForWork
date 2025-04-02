@@ -93,3 +93,67 @@ export const handleLoginUI = () => {
     pollingFeed = setInterval(pollFeed, POLLING_INTERVAL_TIME);
     pollingNotification = setInterval(pollNotification, POLLING_INTERVAL_TIME);
 };
+
+
+export const handleLogout = () => {
+    document.getElementById("feed-items").textContent = "";
+    // localStorage.removeItem("token");
+    // localStorage.removeItem("userId");
+    // localStorage.removeItem("feed");
+    localStorage.clear();
+    // show("section-logged-out");
+    hide("section-logged-in");
+    show("nav-register");
+    show("nav-login");
+    hide("nav-logout");
+    hide("nav-profile");
+    hide("nav-add-job");
+    hide("page-profile");
+    show("page-feed");
+    
+    clearInterval(pollingFeed);
+    clearInterval(pollingNotification);
+    window.location.href = "";
+};
+
+
+export const apiCall = (path, method, body, headers = {}) => {
+    const options = {
+        method: method,
+        headers: {
+            "Content-type": "application/json",
+            ...headers, 
+        },
+    };
+
+    if (method === "GET" && body) {
+        
+        const queryString = new URLSearchParams(body).toString();
+        if (queryString)
+            path += "?" + queryString;
+    } else if (body) {
+        options.body = JSON.stringify(body);
+    }
+
+    if (localStorage.getItem("token")) {
+        options.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
+    }
+
+    return new Promise((resolve, reject) => {
+        fetch(`http://localhost:${BACKEND_PORT}/` + path, options)
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (data.error) {
+                    showErrorPopup(data.error);
+                } else {
+                    resolve(data);
+                }
+            })
+            .catch((error) => {
+                console.error("Fetch error:", error);
+                reject(error);
+            });
+    });
+};
