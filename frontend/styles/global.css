@@ -299,3 +299,17 @@ footer p {
     left: 0;
     z-index: 999;
 }
+
+/* flatpickr CSS */
+.flatpickr-calendar {
+    background-color: #f3f3f3;
+  }
+  
+  .flatpickr-day.today {
+    background-color: red;
+  }
+  
+  .flatpickr-day.selected {
+    background-color: #ffa;
+  }
+  
