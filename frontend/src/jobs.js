@@ -112,3 +112,78 @@ export const populatePostCards = (data, containerId) => {
                 const creatorText = createInfoTextElement("Posted by: " + creatorName, "card-text text-muted post-creator-text");
                 return creatorText;
             })
+
+        const createTimeText = createInfoTextElement("Post time: " + formatTime(item.createdAt), "card-text text-muted");
+        extraInfo.appendChild(createTimeText);
+        const startingDateText = createInfoTextElement("Starting date: " + formatTime(item.start), "card-text text-muted");
+
+        extraInfo.appendChild(startingDateText);
+        const actionsRow = document.createElement("div");
+        actionsRow.className = "d-flex justify-content-start align-items-center mt-2 actions-row";
+        cardBody.appendChild(actionsRow);
+
+        
+        if (containerId === "feed-items") {
+            
+            const likeButton = document.createElement("button");
+            likeButton.className = "btn btn-outline-primary btn-sm me-2 like-button";
+            actionsRow.appendChild(likeButton);
+            const likeIcon = document.createElement("i"); 
+            likeIcon.className = "fas fa-thumbs-up";
+            likeButton.appendChild(likeIcon);
+            const likeText = document.createTextNode(" Like ");
+            likeButton.appendChild(likeText);
+            const likeBadge = document.createElement("span");
+            likeBadge.className = "badge bg-danger like-badge";
+            likeBadge.textContent = item.likes.length;
+            likeButton.appendChild(likeBadge);
+            likeBadge.addEventListener("click", (event) => {
+                event.stopPropagation(); 
+                
+                const likedBy = item.likes.map(user => user.userId)
+                popupLikeList(likedBy);
+            });
+            const currentUserId = localStorage.getItem("userId");
+            const userHasLiked = item.likes.find(user => user.userId == currentUserId);
+            toggleLikeButton(likeButton, userHasLiked);
+            likeButton.addEventListener('click', () => {
+                const liked = item.likes.find(user => user.userId == currentUserId);
+                if (liked) {
+                    apiCall(`job/like`, "PUT", { "id": item.id, "turnon": false }).then(() => {
+                        
+                        populateFeed();
+                    })
+                    .catch(() => {
+                        showErrorPopup("No internet connection");
+                    });
+                } else {
+                    apiCall(`job/like`, "PUT", { "id": item.id, "turnon": true }).then(() => {
+                        
+                        populateFeed();
+                    })
+                    .catch(() => {
+                        showErrorPopup("No internet connection");
+                    });
+                }
+            });
+
+            
+            const commentButton = document.createElement("button");
+            commentButton.className = "btn btn-outline-secondary btn-sm comment-button";
+            actionsRow.appendChild(commentButton);
+            const commentIcon = document.createElement("i");
+            commentIcon.className = "fas fa-comment";
+            commentButton.appendChild(commentIcon);
+            const commentText = document.createTextNode(" Comments ");
+            commentButton.appendChild(commentText);
+            const commentBadge = document.createElement("span");
+            commentBadge.className = "badge bg-secondary";
+            commentBadge.textContent = item.comments.length;
+            commentButton.appendChild(commentBadge);
+            commentButton.addEventListener("click", () => {
+                
+                document.getElementById("comment-input").value = "";
+                
+                popupCommentList(item.comments, item.id);
+            });
+        }
