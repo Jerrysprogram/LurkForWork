@@ -187,3 +187,63 @@ export const populatePostCards = (data, containerId) => {
                 popupCommentList(item.comments, item.id);
             });
         }
+
+        
+        if (containerId === "user-jobs" && item.creatorId == localStorage.getItem("userId")) {
+            const updateButton = document.createElement("button");
+            updateButton.className = "btn btn-outline-primary btn-sm me-2 like-button";
+            actionsRow.appendChild(updateButton);
+            const updateText = document.createTextNode(" Edit ");
+            updateButton.appendChild(updateText);
+            updateButton.addEventListener("click", () => {
+                currentJobId = item.id;
+                showPopup("add-job-popup");
+                
+                document.getElementById("add-job-popup-title").textContent = "Edit Job";
+                document.getElementById("job-title").value = item.title;
+                document.getElementById("job-description").value = item.description;
+                document.getElementById("job-start-date").value = item.start;
+            });
+
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "btn btn-outline-danger btn-sm";
+            actionsRow.appendChild(deleteButton);
+            const deleteText = document.createTextNode(" DELETE ");
+            deleteButton.appendChild(deleteText);
+            deleteButton.addEventListener("click", () => {
+                apiCall(`job`, "DELETE", { "id": item.id })
+                    .then(() => {
+                        
+                        const currentUserId = localStorage.getItem("userId");
+                        return populateUserInfo(currentUserId);
+                    })
+                    .then((newUserData) => {
+                        document.getElementById("user-jobs").textContent = "";
+                        populatePostCards(newUserData.jobs, "user-jobs");
+                    })
+            });
+        }
+
+        return creatorTextPromise.then((creatorText) => {
+            extraInfo.appendChild(creatorText);
+            if (containerId === "feed-items") {
+                creatorText.addEventListener("click", () => {
+                    show("page-profile");
+                    hide("section-logged-in");;
+                    show("nav-feed");
+                    hide("nav-profile");
+
+                    populateUserInfo(item.creatorId)
+                        .then((data) => {
+                            document.getElementById(containerId).textContent = "";
+                            populatePostCards(data.jobs, "user-jobs");
+                            populateWatchees(data);
+                        });
+                });
+            }
+            document.getElementById(containerId).appendChild(feedDom);
+        });
+    });
+
+    return Promise.all(cardPromises);
+};
