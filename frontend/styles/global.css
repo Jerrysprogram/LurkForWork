@@ -156,7 +156,7 @@ footer p {
     margin: 0;
 }
 .login-btn{
-    border: 1px solid #fff;
+    border: 1px solid;
     border-radius: 36px;
     width: 80px;
     line-height: 38px;
@@ -312,4 +312,10 @@ footer p {
   .flatpickr-day.selected {
     background-color: #ffa;
   }
+
+/* Arial font */
+/* * {
+    font-family: Arial, sans-serif !important;
+  } */
+  
   
