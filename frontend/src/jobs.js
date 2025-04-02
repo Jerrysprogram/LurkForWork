@@ -346,3 +346,101 @@ const formatTime = (createAt) => {
         return `${day}/${month}/${year}`;
     }
 };
+
+
+const createInfoTextElement = (text, className) => {
+    const paragraph = document.createElement("p");
+    paragraph.className = className;
+    paragraph.textContent = text;
+    return paragraph;
+};
+
+
+const toggleLikeButton = (button, liked) => {
+    if (liked) {
+        button.classList.remove('btn-outline-primary');
+        button.classList.add('btn-primary');
+    } else {
+        button.classList.remove('btn-primary');
+        button.classList.add('btn-outline-primary');
+    }
+};
+
+
+const showPopup = (id) => {
+    document.getElementById(id).style.display = "block";
+};
+
+const popupLikeList = (likedBy) => {
+    const likeList = document.getElementById("like-list");
+
+    likedBy.forEach(userId => {
+        const listItem = document.createElement("li");
+        listItem.className = "list-group-item";
+        const listItemSpan = document.createElement("span");
+        getUsernameById(userId).then((name) => {
+            listItemSpan.textContent = name;
+        });
+
+        listItem.appendChild(listItemSpan);
+        likeList.appendChild(listItem);
+
+        listItem.addEventListener("click", () => {
+            show("page-profile");
+            hide("section-logged-in");;
+            show("nav-feed");
+            hide("nav-profile");
+
+            document.getElementById("like-list-popup").style.display = "none";
+            
+            const likeList = document.getElementById("like-list");
+            while (likeList.firstChild) {
+                likeList.removeChild(likeList.firstChild);
+            }
+
+            
+            populateUserInfo(userId)
+                .then((data) => {
+                    populatePostCards(data.jobs, "user-jobs");
+                    populateWatchees(data);
+                });
+        });
+    });
+
+    showPopup("like-list-popup");
+};
+
+
+const popupCommentList = (comments, postId) => {
+    const commentList = document.getElementById("comment-list");
+
+    comments.forEach(comment => {
+        const listItem = document.createElement("li");
+        listItem.className = "list-group-item";
+        const listItemSpan = document.createElement("span");
+        listItemSpan.textContent = comment.userName + ': ' + comment.comment;
+        listItem.appendChild(listItemSpan);
+
+        listItem.addEventListener("click", () => {
+            show("page-profile");
+            hide("section-logged-in");;
+            show("nav-feed");
+            hide("nav-profile");
+
+            document.getElementById("comment-list-popup").style.display = "none";
+            
+            const commentList = document.getElementById("comment-list");
+            while (commentList.firstChild) {
+                commentList.removeChild(commentList.firstChild);
+            }
+
+            populateUserInfo(comment.userId)
+                .then((data) => {
+                    document.getElementById("feed-items").textContent = "";
+                    populatePostCards(data.jobs, "user-jobs");
+                    populateWatchees(data);
+                });
+        });
+
+        commentList.appendChild(listItem);
+    });
