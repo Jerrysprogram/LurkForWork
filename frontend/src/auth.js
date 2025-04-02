@@ -61,4 +61,3 @@ export const registerValidator = (email, name, password, passwordConfirm) => {
     }
     return true;
 };
-
