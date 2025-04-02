@@ -21,40 +21,62 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
 </head>
 
+
+
+
+
 <body>
 
-    <header id="main-header">
-        <nav>
-            <a href="#/feed">Feed</a>
-            <a href="#/page1">Page1</a>
-            <a href="#/page2">Page2</a>
+  <header class="bg-dark py-3">
+    <div class="container d-flex justify-content-between align-items-center">
+        <h1 class="text-white mb-0 flex-shrink-0" id="website-name">
+            <a href="">Lurkforwork</a>
+        </h1>
+        <nav class="px-5">
+            <ul class="nav">
+                <li id="nav-register" class="nav-item">
+                    <a class="nav-link text-white">Register</a>
+                </li>
+                <li id="nav-login" class="nav-item login-btn">
+                    <a class="nav-link text-white">Login</a>
+                </li>
+                <li id="nav-add-job" class="nav-item hide">
+                    <a class="nav-link text-white">Add Job</a>
+                </li>
+                <li id="nav-profile" class="nav-item hide">
+                    <a class="nav-link text-white"  href="#profile">Profile</a>
+                </li>
+                <li id="nav-feed" class="nav-item hide" >
+                    <a class="nav-link text-white" href="#feed">Find Job</a>
+                </li>
+                <li id="nav-logout" class="nav-item hide">
+                    <a class="nav-link text-white">Logout</a>
+                </li>
+               
+            </ul>
         </nav>
-    </header>
+    </div>
+  </header>
     
-    <!-- 登录页面的内容 -->
-    <section id="login-page" class="fullpage">
-        <div class="auth-container">
-          <div class="auth-box">
-            <h2>Login to LurkForWork</h2>
-            <form id="loginForm">
-              <div class="form-group">
-                <label for="loginEmail">Email</label>
-                <input 
-                  type="email" 
-                  id="loginEmail" 
-                  placeholder="Email" 
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="loginPassword">Password</label>
-                <input 
-                  type="password" 
-                  id="loginPassword" 
-                  placeholder="Password" 
-                  required
-                />
-              </div>
+  <div id="confirm-popup" class="hide">
+    <div id="confirm-popup-container">
+        <p id="confirm-popup-message"></p>
+        <div class="confirm-popup-buttons">
+            <button id="logout-popup-cancel" class="btn btn-secondary">Cancel</button>
+            <button id="logout-popup-cofirm" class="btn btn-secondary">Confirm</button>
+        </div>
+    </div>
+  </div>
+
+  <div id="error-popup" class="hide">
+      <div id="error-popup-container">
+          <p id="error-popup-message"></p>
+          <button id="error-popup-close" class="btn btn-secondary">Close</button>
+      </div>
+  </div>
+              
+
+
               <div class="form-group">
                 <button type="submit" class="auth-button">Login</button>
               </div>
