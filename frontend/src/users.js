@@ -120,6 +120,20 @@ document.getElementById("nav-profile").addEventListener("click", () => {
     hide("section-logged-in");
     hide("main-content");
     show("page-profile");
+
+    
+    // const userId = localStorage.getItem("userId");
+    // populateUserInfo(userId)
+    //     .then((data) => {
+            
+    //         const jobs = data.jobs;
+    //         const containerId = "user-jobs";
+    //         document.getElementById(containerId).textContent = "";
+    //         populatePostCards(jobs, containerId);
+
+            
+    //         populateWatchees(data);
+    //     });
 });
 const showPopup = (id) => {
     document.getElementById(id).style.display = "block";
@@ -190,3 +204,66 @@ const updateProfile = () => {
         showErrorPopup("Missing fields");
     }
 };
+
+document.getElementById("edit-profile-submit").addEventListener("click", () => {
+    updateProfile().then(() => {
+        
+        const currentUserId = localStorage.getItem("userId");
+        populateUserInfo(currentUserId)
+            .then((newUserData) => {
+                populateFeed(newUserData.jobs, "user-jobs");
+                populateWatchees(newUserData);
+            });
+
+        
+        document.getElementById("edit-profile-popup").style.display = "none";
+        document.getElementById("profile-title").value = "";
+        document.getElementById("profile-name").value = "";
+        document.getElementById("profile-password").value = "";
+        document.getElementById("profile-image").value = "";
+    });
+});
+
+document.getElementById("watch-button").addEventListener("click", () => {
+    const currentUserId = document.getElementById("user-id").textContent.slice(1); 
+    const turnon = (document.getElementById("watch-button").textContent === "watch") ? true : false;
+
+    const payload = {
+        id: currentUserId,
+        turnon: turnon,
+    };
+    apiCall("user/watch", "PUT", payload);
+    populateFeed();
+    populateUserInfo(currentUserId)
+        .then((data) => {
+            
+            const jobs = data.jobs;
+            const containerId = "user-jobs";
+            document.getElementById(containerId).textContent = "";
+            populatePostCards(jobs, containerId);
+
+            
+            populateWatchees(data);
+        });
+});
+
+document.getElementById("watch-user-button").addEventListener("click", () => {
+    const targetUserEmail = prompt("Enter the email of the user:");
+    if (!emailValidator(targetUserEmail)) {
+        showErrorPopup("Email format should be: example@domain.com");
+        return;
+    }
+
+    const payload = {
+        email: targetUserEmail,
+        turnon: true,
+    };
+    apiCall("user/watch", "PUT", payload);
+});
+
+document.getElementById("login-cancel").addEventListener("click", () => {
+    hide("page-login");
+});
+document.getElementById("register-cancel").addEventListener("click", () => {
+    hide("page-register");
+});
