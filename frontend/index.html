@@ -109,51 +109,63 @@
   </div>
 
 
-  
-              </div>
-              <div class="form-group">
-                <label for="registerPassword">Password</label>
-                <input 
-                  type="password" 
-                  id="registerPassword" 
-                  placeholder="Password" 
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="registerPasswordConfirm">Confirm Password</label>
-                <input 
-                  type="password" 
-                  id="registerPasswordConfirm" 
-                  placeholder="Confirm Password" 
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <button type="submit" class="auth-button">Register</button>
-              </div>
-              <div class="auth-links">
-                <a href="#/login">Already have an account? Login</a>
-              </div>
-            </form>
-          </div>
+  <div id="add-job-popup" class="popup">
+    <div class="popup-content">
+        <div class="popup-header">
+            <h4 class="popup-title" id="add-job-popup-title"></h4>
+            <span id="add-job-close-btn" class="close-btn">&times;</span>
         </div>
-    </section>
+        <div class="form-group">
+            <label for="job-title">Job Title</label>
+            <input type="text" id="job-title" class="form-control" placeholder="Enter job title" />
+        </div>
+        <div class="form-group">
+            <label for="job-start-date">Start Date</label>
+            <input type="date" id="job-start-date" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="job-description">Job Description</label>
+            <textarea id="job-description" class="form-control" rows="3"
+                placeholder="Enter job description"></textarea>
+            <div class="form-group">
+                <label for="job-image">Job Image</label>
+                <input type="file" id="job-image" class="form-control-file" accept="image/*" />
+            </div>
+            <div class="form-group">
+                <div id="drop-zone" class="drop-zone">
+                    <span class="drop-zone__prompt">Drop file here or click to upload</span>
+                </div>
+            </div>
+            <button id="add-job-submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+  </div>
 
-    <!-- 主页面的内容 -->
-    <section id="home-page" class="fullpage hide">
-        <main role="main">
-          <div id="feed">Feed 页面</div>
-          <!-- 下面仅示例如何切换到不同子页面 -->
-          <div id="page1" class="page bg-blue hide">page1</div>
-          <div id="page2" class="page bg-green hide">page2</div>
-          <div id="page3" class="page bg-pink hide">page3</div>
-          <div id="page4" class="page bg-red hide">page4</div>
-        </main>
-    </section>
-
-    <script type="module" src="src/main2.js"></script>
-    <script src="src/errorPopup.js"></script>
+  <div id="edit-profile-popup" class="popup">
+    <div class="popup-content">
+        <div class="popup-header">
+            <h4 class="popup-title" id="edit-profile-popup-title"></h4>
+            <span id="edit-profile-close-btn" class="close-btn">&times;</span>
+        </div>
+        <div class="form-group">
+            <label for="profile-email">Email</label>
+            <input type="text" id="profile-email" class="form-control" placeholder="Enter Email" />
+        </div>
+        <div class="form-group">
+            <label for="profile-name">Name</label>
+            <input type="text" id="profile-name" class="form-control" placeholder="Enter Name" />
+        </div>
+        <div class="form-group">
+            <label for="profile-password">Password</label>
+            <input type="text" id="profile-password" class="form-control" placeholder="Enter Password" />
+        </div>
+        <div class="form-group">
+            <label for="profile-image">Avatar</label><br>
+            <input type="file" id="profile-image" class="form-control-file" accept="image/*" />
+        </div>
+        <button id="edit-profile-submit" class="btn btn-primary">Submit</button>
+    </div>
+  </div>
 
 
 
