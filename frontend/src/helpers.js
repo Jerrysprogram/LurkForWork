@@ -13,6 +13,14 @@
  * @param {File} file The file to be read.
  * @return {Promise<string>} Promise which resolves to the file as a data url.
  */
+
+import { BACKEND_PORT, POLLING_INTERVAL_TIME } from "./config.js";
+import { showErrorPopup } from "./auth.js";
+import { populateFeed, pollFeed, pollNotification } from "./jobs.js";
+
+export let pollingFeed = null;
+export let pollingNotification = null;
+
 export function fileToDataUrl(file) {
     const validFileTypes = [ 'image/jpeg', 'image/png', 'image/jpg' ]
     const valid = validFileTypes.find(type => type === file.type);
@@ -29,3 +37,59 @@ export function fileToDataUrl(file) {
     reader.readAsDataURL(file);
     return dataUrlPromise;
 }
+
+
+ export const setToken = (token) => {
+    localStorage.setItem("token", token);
+    hide("section-logged-out");
+   populateFeed();
+};
+
+
+ export const setUserId = (userId) => {
+    localStorage.setItem("userId", userId);
+};
+
+
+
+ export const getUsernameById = (id) => {
+    return apiCall(`user`, "GET", { userId: id })
+        .then((data) => {
+            return data.name;
+        })
+        .catch((error) => {
+            console.error("Error getting username by id", error);
+        });
+};
+
+
+export const show = (element) => {
+    document.getElementById(element).classList.remove("hide");
+};
+
+
+export const hide = (element) => {
+    document.getElementById(element).classList.add("hide");
+};
+
+
+export const handleLogin = (data) => {
+    setToken(data.token);
+    setUserId(data.userId)
+    handleLoginUI();
+};
+
+export const handleLoginUI = () => {
+    hide("section-logged-out");
+    hide("nav-register");
+    hide("nav-login");
+    show("nav-logout");
+    show("nav-profile");
+    show("nav-add-job");
+    show("watch-user-button")
+    show("page-feed");
+    show("nav-feed");
+    
+    pollingFeed = setInterval(pollFeed, POLLING_INTERVAL_TIME);
+    pollingNotification = setInterval(pollNotification, POLLING_INTERVAL_TIME);
+};
