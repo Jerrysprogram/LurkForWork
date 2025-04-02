@@ -1,7 +1,51 @@
 /* base styles, feel free to edit */
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: Arial;
+* {
+    font-family: "Nunito", sans-serif;
+}
+
+.hide {
+    display: none;
+}
+
+.nav-item:hover {
+    cursor: pointer;
+}
+
+/* Header Section */
+header {
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    width: 100%;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media screen and (max-width: 480px) {
+    #website-name {
+        display: none;
+    }
+
+    header .container {
+        flex-direction: column;
+        font-size: medium;
+    }
+}
+#watch-user-button {
+    width: 1000px;
+    margin: 0 auto;
+    margin-top: 55px;
+    text-align: right;
+}
+
+#watch-user-button button {
+    margin-top: 30px;
+}
+#website-name a{
+    text-decoration: none;
+    color: #fff;
 }
