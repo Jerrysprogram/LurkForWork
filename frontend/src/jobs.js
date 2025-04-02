@@ -614,3 +614,48 @@ const getNumFeedItems = () => {
         }
       });
 };
+
+export const pollNotification = () => {
+    getNumFeedItems()
+    .then ((numFeedItems) => {
+            if (lastNumFeedItems && (numFeedItems !== lastNumFeedItems)) {
+                if (lastNumFeedItems < numFeedItems) { 
+                    
+                    const showNotification = () => {
+                        const notification = new Notification("New Job Posted from Lurkforwork!" , {
+                            body: "A user you are watching has posted a new job",
+                        });
+                        notification.onclick = () => {
+                            window.focus();
+                        }
+                    };
+                    if (Notification.permission !== 'granted') {
+                        Notification.requestPermission().then(permission => {
+                            if (permission === 'granted') {
+                                showNotification();
+                            }
+                        });
+                    } else {
+                        showNotification();
+                    }
+                }
+                
+                lastNumFeedItems = numFeedItems;
+            }
+        });
+}
+
+
+const jsonHash = (data) => {
+    const jsonString = JSON.stringify(data);
+    let hash = 0;
+    if (jsonString.length === 0) {
+        return hash;
+    }
+    for (let i = 0; i < jsonString.length; i++) {
+        const char = jsonString.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; 
+    }
+    return hash;
+}
