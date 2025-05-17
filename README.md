@@ -1,7 +1,7 @@
 # LurkForWork - 求职社交平台
 
 ## 项目简介
-LurkForWork 是一个仿 LinkedIn 的简易求职社交平台，前端采用原生 JavaScript 实现，无需任何前端框架，后端基于 Node.js + Express。用户可以注册、登录、发布和管理职位信息，浏览他人资料，进行点赞、评论、关注等社交操作。
+LurkForWork 是一个仿 LinkedIn 的简易求职社交平台，前端采用原生 JavaScript 实现，没有使用任何前端框架，后端基于 Node.js + Express。用户可以注册、登录、发布和管理职位信息，浏览他人资料，进行点赞、评论、关注等社交操作。
 
 ---
 
